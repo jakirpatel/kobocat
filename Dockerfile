@@ -4,6 +4,13 @@ ENV KOBOCAT_SRC_DIR=/srv/src/kobocat \
     BACKUPS_DIR=/srv/backups \
     KOBOCAT_LOGS_DIR=/srv/logs
 
+# State Files
+RUN rm -rf /srv/src && \ 
+    mkdir -p /srv/src && \
+    cd /srv/src && \
+    git clone --depth 1 https://github.com/jakirpatel/kobocat-template.git -b master && \
+    chown -R ${UWSGI_USER} /srv/src/kobocat-template
+
 # Install post-base-image `apt` additions from `apt_requirements.txt`, if modified.
 COPY ./apt_requirements.txt "${KOBOCAT_TMP_DIR}/current_apt_requirements.txt"
 RUN if ! diff "${KOBOCAT_TMP_DIR}/current_apt_requirements.txt" "${KOBOCAT_TMP_DIR}/base_apt_requirements.txt"; then \
